@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/endpoints"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
@@ -18,6 +19,7 @@ type RealS3Proxy struct {
 }
 
 func NewS3Proxy(key, secret, region, bucket string) S3Proxy {
+	defaultResolver := endpoints.DefaultResolver()
 	s3CustResolverFn := func(service, region string, optFns ...func(*endpoints.Options)) (endpoints.ResolvedEndpoint, error) {
 		if service == "s3" {
 			return endpoints.ResolvedEndpoint{
