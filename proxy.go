@@ -18,9 +18,21 @@ type RealS3Proxy struct {
 }
 
 func NewS3Proxy(key, secret, region, bucket string) S3Proxy {
+	s3CustResolverFn := func(service, region string, optFns ...func(*endpoints.Options)) (endpoints.ResolvedEndpoint, error) {
+		if service == "s3" {
+			return endpoints.ResolvedEndpoint{
+				URL:           "https://s3.filebase.com",
+				SigningRegion: "us-east-1",
+			}, nil
+		}
+
+		return defaultResolver.EndpointFor(service, region, optFns...)
+	}
+	
 	sess := session.Must(session.NewSession(&aws.Config{
 		Region:      aws.String(region),
 		Credentials: credentials.NewStaticCredentials(key, secret, ""),
+		EndpointResolver: endpoints.ResolverFunc(s3CustResolverFn),
 	}))
 
 	return &RealS3Proxy{
