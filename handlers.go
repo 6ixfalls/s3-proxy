@@ -116,7 +116,7 @@ func NewProxyHandler(proxy S3Proxy, prefix string) http.HandlerFunc {
 			return
 		}
 		
-		if strings.HasPrefix(obj.ContentType, "application/xml") {
+		if strings.HasPrefix(s2s(obj.ContentType), "application/xml") {
 			http.Error(w, err.Error(), http.StatusNotFound)
 			return
 		}
