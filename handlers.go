@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+	"strings"
 
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/service/s3"
@@ -112,6 +113,11 @@ func NewProxyHandler(proxy S3Proxy, prefix string) http.HandlerFunc {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 			}
 
+			return
+		}
+		
+		if strings.HasPrefix(obj.ContentType, "application/xml") {
+			http.Error(w, err.Error(), http.StatusNotFound)
 			return
 		}
 
