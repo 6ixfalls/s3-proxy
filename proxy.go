@@ -23,7 +23,7 @@ func NewS3Proxy(key, secret, region, bucket string) S3Proxy {
 	s3CustResolverFn := func(service, region string, optFns ...func(*endpoints.Options)) (endpoints.ResolvedEndpoint, error) {
 		if service == "s3" {
 			return endpoints.ResolvedEndpoint{
-				URL:           "https://s3.filebase.com",
+				URL:           "https://gateway.storjshare.io",
 				SigningRegion: "us-east-1",
 			}, nil
 		}
